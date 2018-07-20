@@ -9,6 +9,7 @@ name = "pypi"
 
 "autopep8" = "*"
 "flake8" = "*"
+rope = "*"
 
 
 [packages]
