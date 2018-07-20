@@ -32,3 +32,43 @@ class TestClass(unittest.TestCase):
         self.assertEqual(p_util.parkings[0].car.colour, 'Magenta')
         self.assertEqual(p_util.parkings[0].car.registration, 'KA-01-AB-1234')
         self.assertTrue(p_util.is_parking_full())
+
+    def test_release_one(self):
+        p_util = ParkingUtil()
+        p_util.init_slots(2)
+        p_util.block('KA-01-AB-1234', 'Red')
+        p_util.block('KA-02-cd-5678', 'Green')
+        self.assertEqual(len(p_util.parkings), 2)
+        p_util.release(1)
+
+    def test_release_negative_index(self):
+        p_util = ParkingUtil()
+        p_util.init_slots(1)
+        p_util.block('KA-01-AB-1234', 'Red')
+        with self.assertRaises(ValueError):
+            p_util.release(-2)
+
+    def test_release_out_of_bound_index(self):
+        p_util = ParkingUtil()
+        p_util.init_slots(1)
+        p_util.block('KA-01-AB-1234', 'Red')
+        with self.assertRaises(ValueError):
+            p_util.release(12)
+
+    def test_get_reg_by_colour(self):
+        p_util = ParkingUtil()
+        p_util.init_slots(3)
+        p_util.block('KA-01-AB-1234', 'Red')
+        p_util.block('KA-02-cd-5678', 'Green')
+        p_util.block('KA-01-AB-9012', 'Red')
+        regs = p_util.get_registration_by_colour('Red')
+        self.assertTrue(regs[0] == 'KA-01-AB-1234')
+        self.assertTrue(regs[1] == 'KA-01-AB-9012')
+
+    def test_get_slot_by_reg(self):
+        p_util = ParkingUtil()
+        p_util.init_slots(3)
+        p_util.block('KA-01-AB-1234', 'Red')
+        p_util.block('KA-02-cd-5678', 'Green')
+        p_util.block('KA-01-AB-9012', 'Red')
+        self.assertTrue(p_util.get_slot_by_registration('KA-02-cd-5678') == 2)

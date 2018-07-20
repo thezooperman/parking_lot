@@ -29,18 +29,29 @@ class ParkingUtil(object):
         # Find first empty slot
         empty_slot = self.parkings.index(0)
         self.parkings[empty_slot] = Parking(
-            Car(registration, colour), empty_slot)
+            Car(registration, colour), empty_slot + 1)
         self.__slot_counter += 1
 
     def release(self, slot):
         if slot <= 0 and slot > len(self.parkings):
-            return ''
-        self.parkings[slot - 1] = 0
-        self.__slot_counter -= 1
+            LOGGER.error('Slot does not exist')
+            raise ValueError('Slot does not exist')
+        flagFound = False
+        for idx, parked in enumerate(self.parkings):
+            if isinstance(parked, Parking)\
+                    and parked.parking_slot == slot:
+                flagFound = True
+                break
+        if flagFound:
+            self.parkings[idx] = 0
+            self.__slot_counter -= 1
+        else:
+            LOGGER.error('Slot does not exist')
+            raise ValueError('Slot does not exist')
 
     def get_registration_by_colour(self, colour):
         return [c.car.registration for c in self.parkings
-                if c.car is isinstance(Car)
+                if isinstance(c.car, Car)
                 and c.car.colour.lower() == colour.lower()]
 
     def get_slot_by_registration(self, registration):
@@ -59,3 +70,5 @@ if __name__ == '__main__':
     obj = ParkingUtil()
     obj.init_slots(1)
     obj.block('abcd', 'white')
+    obj.block('efgh', 'red')
+    obj.release(1)
