@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 import logging
 
-from .parking import Parking
-from .vehicle import Car
+from parking import Parking
+from vehicle import Car
 
 LOGGER = logging.getLogger(__name__)
 
@@ -10,8 +10,8 @@ LOGGER = logging.getLogger(__name__)
 class ParkingUtil(object):
     def __init__(self):
         self.__max_slots = None
-        self.parkings = None
-        self.__slot_counter = 1
+        self.parkings = []
+        self.__slot_counter = 0
 
     def init_slots(self, number_of_slots):
         if number_of_slots <= 0:
@@ -53,3 +53,9 @@ class ParkingUtil(object):
             if parking.car.registration.lower() ==\
                     registration.lower():
                 yield parking.parking_slot
+
+
+if __name__ == '__main__':
+    obj = ParkingUtil()
+    obj.init_slots(1)
+    obj.block('abcd', 'white')

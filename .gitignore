@@ -4,3 +4,5 @@ src/main/python/__pycache__/*
 target/*
 .vscode/*
 tests/__pycache__/*
+src/unittest/python/__pycache__/*
+src/main/scripts/__pycache__/*
