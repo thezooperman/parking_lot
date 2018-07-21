@@ -132,13 +132,13 @@ class TestClass(unittest.TestCase):
         self.assertTrue(p_util.block('KA-03-RE-2345', 'Magenta') == 2)
         self.assertTrue(p_util.block('KA-05-PQ-8875', 'Brown') == 4)
 
-    def test_read_from_file_undefined_path(self):
+    def test_command_execute_undefined_path(self):
         cmd = CommandParser()
         file_path = r'home/aritraghosh/MyWorkspace/README.md'
         with self.assertRaises(FileNotFoundError):
-            cmd.read_from_file(file_path)
+            cmd.command_execute(file_path)
 
-    def test_read_from_file(self):
+    def test_command_execute(self):
         cmd = CommandParser()
         file_path = r'/home/aritraghosh/MyWorkspace/parking_lot/README.md'
-        self.assertTrue(len(cmd.read_from_file(file_path)) > 0)
+        self.assertTrue(len(cmd.command_execute(file_path)) > 0)

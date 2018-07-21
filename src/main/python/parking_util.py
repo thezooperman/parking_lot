@@ -6,6 +6,7 @@ from vehicle import Car
 
 LOGGER = logging.getLogger(__name__)
 NOT_FOUND = 'Not Found'
+PARKING_FULL = 'Sorry, parking lot is full'
 
 
 class ParkingUtil(object):
@@ -26,7 +27,7 @@ class ParkingUtil(object):
 
     def block(self, registration, colour):
         if self.is_parking_full():
-            return 'No slot available'
+            return PARKING_FULL
         # Find first empty slot
         empty_slot = self.parkings.index(0)
         self.parkings[empty_slot] = Parking(
