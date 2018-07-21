@@ -32,7 +32,7 @@ class ParkingUtil(object):
         self.parkings[empty_slot] = Parking(
             Car(registration, colour), empty_slot + 1)
         self.__slot_counter += 1
-        return empty_slot
+        return empty_slot + 1
 
     def release(self, slot):
         if slot <= 0 and slot > len(self.parkings):
