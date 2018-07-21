@@ -5,6 +5,7 @@ from parking import Parking
 from vehicle import Car
 
 LOGGER = logging.getLogger(__name__)
+NOT_FOUND = 'Not Found'
 
 
 class ParkingUtil(object):
@@ -31,6 +32,7 @@ class ParkingUtil(object):
         self.parkings[empty_slot] = Parking(
             Car(registration, colour), empty_slot + 1)
         self.__slot_counter += 1
+        return empty_slot
 
     def release(self, slot):
         if slot <= 0 and slot > len(self.parkings):
@@ -50,21 +52,30 @@ class ParkingUtil(object):
             raise ValueError('Slot does not exist')
 
     def get_registrations_by_colour(self, colour):
-        for c in self.parkings:
-            if isinstance(c.car, Car) and \
-                    c.car.colour.lower() == colour.lower():
-                yield c.car.registration
+        if not colour:
+            return NOT_FOUND
+        return [parking.car.registration for parking
+                in self.parkings if isinstance(parking, Parking) and
+                parking.car.colour.lower() == colour.lower()]
 
     def get_slot_by_registration(self, registration):
+        if not registration:
+            NOT_FOUND
         for parking in self.parkings:
             if parking.car.registration.lower() == registration.lower():
                 return parking.parking_slot
+        return NOT_FOUND
 
     def get_slots_by_colour(self, colour):
-        for parking in self.parkings:
-            if parking.car.colour.lower() ==\
-                    colour.lower():
-                yield parking.parking_slot
+        if not colour:
+            return NOT_FOUND
+        return [parking.parking_slot for parking in
+                self.parkings if isinstance(parking, Parking) and
+                parking.car.colour.lower() == colour.lower()]
+
+    def get_parking_status(self):
+        return [parking for parking in self.parkings if
+                isinstance(parking, Parking)]
 
 
 if __name__ == '__main__':
@@ -72,4 +83,8 @@ if __name__ == '__main__':
     obj.init_slots(1)
     obj.block('abcd', 'white')
     obj.block('efgh', 'red')
-    obj.release(1)
+    # obj.release(1)
+    print(obj.get_registrations_by_colour('magenta'))
+    print(obj.get_registrations_by_colour('white'))
+    print(obj.get_slot_by_registration('efgh'))
+    print(obj.get_slots_by_colour('white'))
