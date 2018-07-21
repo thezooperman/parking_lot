@@ -71,11 +71,19 @@ class TestClass(unittest.TestCase):
         p_util.block('KA-01-AB-1234', 'Red')
         self.assertTrue(p_util.get_registrations_by_colour(
             'White') == [])
+        self.assertTrue(p_util.get_registrations_by_colour(None) == NOT_FOUND)
 
     def test_get_slots_by_colour_not_found(self):
         p_util = ParkingUtil()
         self.assertTrue(p_util.get_slots_by_colour(
             'red') == [])
+        self.assertTrue(p_util.get_slots_by_colour(None) == NOT_FOUND)
+
+    def test_get_slot_by_reg_not_found(self):
+        p_util = ParkingUtil()
+        p_util.init_slots(1)
+        p_util.block('KA-01-AB-1234', 'Red')
+        self.assertTrue(p_util.get_slot_by_registration(None) == NOT_FOUND)
 
     def test_get_slot_by_reg(self):
         p_util = ParkingUtil()

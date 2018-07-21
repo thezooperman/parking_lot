@@ -60,7 +60,7 @@ class ParkingUtil(object):
 
     def get_slot_by_registration(self, registration):
         if not registration:
-            NOT_FOUND
+            return NOT_FOUND
         for parking in self.parkings:
             if parking.car.registration.lower() == registration.lower():
                 return parking.parking_slot
