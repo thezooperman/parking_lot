@@ -49,20 +49,21 @@ class ParkingUtil(object):
             LOGGER.error('Slot does not exist')
             raise ValueError('Slot does not exist')
 
-    def get_registration_by_colour(self, colour):
-        return [c.car.registration for c in self.parkings
-                if isinstance(c.car, Car)
-                and c.car.colour.lower() == colour.lower()]
+    def get_registrations_by_colour(self, colour):
+        for c in self.parkings:
+            if isinstance(c.car, Car) and \
+                    c.car.colour.lower() == colour.lower():
+                yield c.car.registration
 
     def get_slot_by_registration(self, registration):
         for parking in self.parkings:
             if parking.car.registration.lower() == registration.lower():
                 return parking.parking_slot
 
-    def get_slots_by_registration(self, registration):
+    def get_slots_by_colour(self, colour):
         for parking in self.parkings:
-            if parking.car.registration.lower() ==\
-                    registration.lower():
+            if parking.car.colour.lower() ==\
+                    colour.lower():
                 yield parking.parking_slot
 
 
