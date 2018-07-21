@@ -136,9 +136,9 @@ class TestClass(unittest.TestCase):
         cmd = CommandParser()
         file_path = r'home/aritraghosh/MyWorkspace/README.md'
         with self.assertRaises(FileNotFoundError):
-            cmd.command_execute(file_path)
+            cmd.file_command(file_path)
 
     def test_command_execute(self):
         cmd = CommandParser()
         file_path = r'/home/aritraghosh/MyWorkspace/parking_lot/README.md'
-        self.assertTrue(len(cmd.command_execute(file_path)) > 0)
+        self.assertTrue(len(cmd.file_command(file_path)) > 0)
