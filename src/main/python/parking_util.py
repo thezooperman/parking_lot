@@ -76,15 +76,3 @@ class ParkingUtil(object):
     def get_parking_status(self):
         return [parking for parking in self.parkings if
                 isinstance(parking, Parking)]
-
-
-if __name__ == '__main__':
-    obj = ParkingUtil()
-    obj.init_slots(1)
-    obj.block('abcd', 'white')
-    obj.block('efgh', 'red')
-    # obj.release(1)
-    print(obj.get_registrations_by_colour('magenta'))
-    print(obj.get_registrations_by_colour('white'))
-    print(obj.get_slot_by_registration('efgh'))
-    print(obj.get_slots_by_colour('white'))

@@ -2,6 +2,7 @@
 
 import unittest
 from parking_util import ParkingUtil, NOT_FOUND
+from command_parser import CommandParser
 
 
 class TestClass(unittest.TestCase):
@@ -130,3 +131,14 @@ class TestClass(unittest.TestCase):
         self.assertFalse(p_util.is_parking_full())
         self.assertTrue(p_util.block('KA-03-RE-2345', 'Magenta') == 2)
         self.assertTrue(p_util.block('KA-05-PQ-8875', 'Brown') == 4)
+
+    def test_read_from_file_undefined_path(self):
+        cmd = CommandParser()
+        file_path = r'home/aritraghosh/MyWorkspace/README.md'
+        with self.assertRaises(FileNotFoundError):
+            cmd.read_from_file(file_path)
+
+    def test_read_from_file(self):
+        cmd = CommandParser()
+        file_path = r'/home/aritraghosh/MyWorkspace/parking_lot/README.md'
+        self.assertTrue(len(cmd.read_from_file(file_path)) > 0)
