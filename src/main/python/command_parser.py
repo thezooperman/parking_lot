@@ -5,6 +5,7 @@ import os
 import sys
 from constants import Constants
 from file_command_parser import FileCommandParser
+from interactive_command_parser import InteractiveCommandParser
 
 LOGGER = logging.getLogger(__name__)
 
@@ -39,12 +40,17 @@ class CommandParser(object):
 
     def interactive_command(self):
         os.system('clear')
+        interactive_parser = InteractiveCommandParser()
+        interactive_parser.execute_command(
+            self.__commands, self.__output_messages)
 
 
 def main(argv):
+    obj = CommandParser()
     if len(argv) == 1:
-        obj = CommandParser()
         obj.file_command(argv[0])
+    else:
+        obj.interactive_command()
 
 
 if __name__ == '__main__':
