@@ -3,11 +3,10 @@
 import logging
 import os
 import sys
-from parking_util import ParkingUtil
 from constants import Constants
+from file_command_parser import FileCommandParser
 
 LOGGER = logging.getLogger(__name__)
-PARKING_FULL = 'Sorry, parking lot is full'
 
 
 class CommandParser(object):
@@ -31,80 +30,21 @@ class CommandParser(object):
         }
 
     def file_command(self, file_path):
-        data = None
-        if not file_path or not os.path.exists(file_path) or\
-                not os.path.isfile(file_path):
-            LOGGER.error('Invalid file path')
-            raise FileNotFoundError('Invalid file path')
-        with open(file_path) as input_file:
-            data = input_file.readlines()
-        if data:
-            try:
-                util = ParkingUtil()
-                for line in data:
-                    if line:
-                        splitted = line.split(' ')
-                        command = splitted[0].strip().lower()
-                        if command in self.__commands:
-                            method, param = self.__commands[command]
-                            params = list()
-                            for i in range(1, param + 1):
-                                tmp = splitted[i].replace('\n', '')
-                                if tmp.isdigit():
-                                    tmp = int(tmp)
-                                params.append(tmp)
-                            if command == Constants.CREATE_PARKING_LOT:
-                                value = getattr(util, method)(*params)
-                                print(
-                                    self.__output_messages[command].
-                                    format(*params))
-                            elif command == Constants.PARK:
-                                value = getattr(util, method)(*params)
-                                if value == PARKING_FULL:
-                                    print(PARKING_FULL)
-                                else:
-                                    print(self.__output_messages[command]
-                                          .format(value))
-                            elif command == Constants.LEAVE:
-                                getattr(util, method)(*params)
-                                print(self.__output_messages[command]
-                                      .format(*params))
-                            elif command == Constants.STATUS:
-                                value = getattr(util, method)(*params)
-                                print(self.__output_messages[command]
-                                      .format('', '', ''))
-                                str_format = '{: <10} {: <19} {}'
-                                for parking in value:
-                                    print(
-                                        str_format.format(
-                                            parking.parking_slot,
-                                            parking.car.registration,
-                                            parking.car.colour))
-                            elif command == Constants.REGISTRATION_NUMBERS_FOR_CARS_WITH_COLOUR:
-                                value = getattr(util, method)(*params)
-                                print(*value, sep=', ')
-                            elif command == Constants.SLOT_NUMBERS_FOR_CARS_WITH_COLOUR:
-                                value = getattr(util, method)(*params)
-                                print(*value, sep=', ')
-                            elif command == Constants.SLOT_NUMBER_FOR_REGISTRATION_NUMBER:
-                                value = getattr(util, method)(*params)
-                                print(value, sep=', ')
-                            else:
-                                raise ValueError(
-                                    'Invalid command: {}'
-                                    .format(command))
-            except Exception as ex:
-                LOGGER.exception(str(ex), exc_info=True)
-        else:
-            LOGGER.error('File does not have valid data')
-            raise ValueError('File does not have valid data')
+        file_parser = FileCommandParser()
+        file_parser.file_path = file_path
+        data = \
+            file_parser.execute_command(
+                self.__commands, self.__output_messages)
         return data
+
+    def interactive_command(self):
+        os.system('clear')
 
 
 def main(argv):
     if len(argv) == 1:
         obj = CommandParser()
-        obj.file_command(*argv)
+        obj.file_command(argv[0])
 
 
 if __name__ == '__main__':

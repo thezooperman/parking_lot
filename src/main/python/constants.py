@@ -10,3 +10,4 @@ class Constants(object):
     GET_REGISTRATIONS_BY_COLOUR = 'get_registrations_by_colour'
     SLOT_NUMBERS_FOR_CARS_WITH_COLOUR = 'slot_numbers_for_cars_with_colour'
     SLOT_NUMBER_FOR_REGISTRATION_NUMBER = 'slot_number_for_registration_number'
+    PARKING_FULL = 'Sorry, parking lot is full'
