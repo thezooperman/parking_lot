@@ -1,13 +1,15 @@
-#p1.py
+#!/usr/bin/env python3
 
-import os, logging
+import os
+import logging
 from command import Command
 from parking_lot import ParkingLot
 from constants import COMMANDS, OUTPUT_MESSAGES
 
 LOGGER = logging.getLogger(__name__)
 
-class FileCommand(object):
+
+class FileCommand:
     def __init__(self):
         self.__file_path = ''
 
@@ -26,16 +28,13 @@ class FileCommand(object):
     def execute_command(self):
         cmd = Command()
         receiver = ParkingLot()
-        data = None
         with open(self.file_path, encoding='utf-8') as input_file:
-            data = input_file.readlines()
-        if data:
-            try:
-                for line in data:
+            for line in input_file:
+                try:
                     splitted = line.split(' ')
                     command = splitted[0].strip().lower()
                     if command in COMMANDS:
-                        method, param = COMMANDS[command]
+                        param = COMMANDS[command][1]
                         params = list()
                         for i in range(1, param + 1):
                             tmp = splitted[i].replace('\n', '')
@@ -47,9 +46,5 @@ class FileCommand(object):
                         raise ValueError(
                             'Invalid command: {}'
                             .format(command))
-            except Exception as ex:
-                LOGGER.exception(str(ex), exc_info=True)
-        else:
-            LOGGER.error('File does not have valid data')
-            raise ValueError('File does not have valid data')
-        return data
+                except Exception as ex:
+                    LOGGER.exception(str(ex), exc_info=True)

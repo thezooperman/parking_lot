@@ -3,14 +3,13 @@
 import logging
 import os
 import sys
-from constants import Constants
 from file_command import FileCommand
 from interactive_command import InteractiveCommand
 
 LOGGER = logging.getLogger(__name__)
 
 
-class CommandParser(object):
+class CommandParser:
     def file_command(self, file_path):
         file_parser = FileCommand()
         file_parser.file_path = file_path

@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 
-from constants import Constants
-from constants import OUTPUT_MESSAGES
+import logging
+
+from constants import OUTPUT_MESSAGES, Constants
 from parking import Parking
 from vehicle import Car
-import logging
 
 LOGGER = logging.getLogger(__name__)
 
 
-class ParkingLot(object):
+class ParkingLot:
     def __init__(self):
         self.__max_slots = 10
         self.parkings = []
@@ -42,13 +42,13 @@ class ParkingLot(object):
         if slot <= 0 and slot > len(self.parkings):
             LOGGER.error('Slot does not exist')
             raise ValueError('Slot does not exist')
-        flagFound = False
+        flag_found = False
         for idx, parked in enumerate(self.parkings):
             if isinstance(parked, Parking)\
                     and parked.parking_slot == slot:
-                flagFound = True
+                flag_found = True
                 break
-        if flagFound:
+        if flag_found:
             self.parkings[idx] = 0
             self.__slot_counter -= 1
             print(OUTPUT_MESSAGES[Constants.LEAVE].format(slot))

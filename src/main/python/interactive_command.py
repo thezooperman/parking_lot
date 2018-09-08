@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
 
-import os
 import logging
 from command import Command
 from parking_lot import ParkingLot
-from constants import COMMANDS, OUTPUT_MESSAGES
+from constants import COMMANDS
 
 LOGGER = logging.getLogger(__name__)
 
@@ -23,10 +22,10 @@ class InteractiveCommand:
     def __exec_choice(self, choice, cmd, receiver):
         choice = choice.strip()
         if choice == "exit":
-            sys.exit(0)
+            exit(0)
         splitted = choice.split(' ')
         command = splitted[0].lower()
-        method, param = COMMANDS[command]
+        param = COMMANDS[command][1]
         if command in COMMANDS:
             params = list()
             for i in range(1, param + 1):

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 
-class Constants(object):
+class Constants:
     CREATE_PARKING_LOT = 'create_parking_lot'
     PARK = 'park'
     LEAVE = 'leave'
