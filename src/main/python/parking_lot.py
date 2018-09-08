@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
-import logging
 
+from constants import Constants
+from constants import OUTPUT_MESSAGES
 from parking import Parking
 from vehicle import Car
+import logging
 
 LOGGER = logging.getLogger(__name__)
-NOT_FOUND = 'Not Found'
-PARKING_FULL = 'Sorry, parking lot is full'
 
 
-class ParkingUtil(object):
+class ParkingLot(object):
     def __init__(self):
-        self.__max_slots = None
+        self.__max_slots = 10
         self.parkings = []
         self.__slot_counter = 0
 
@@ -21,19 +21,22 @@ class ParkingUtil(object):
             raise ValueError('Number of slots must be integer and positive')
         self.__max_slots = number_of_slots
         self.parkings = [0] * number_of_slots
+        print(OUTPUT_MESSAGES[Constants.CREATE_PARKING_LOT].format(
+            number_of_slots))
 
     def is_parking_full(self):
         return self.__slot_counter >= self.__max_slots
 
     def block(self, registration, colour):
         if self.is_parking_full():
-            return PARKING_FULL
+            print(Constants.PARKING_FULL)
+            return
         # Find first empty slot
         empty_slot = self.parkings.index(0)
         self.parkings[empty_slot] = Parking(
             Car(registration, colour), empty_slot + 1)
         self.__slot_counter += 1
-        return empty_slot + 1
+        print(OUTPUT_MESSAGES[Constants.PARK].format(empty_slot + 1))
 
     def release(self, slot):
         if slot <= 0 and slot > len(self.parkings):
@@ -48,32 +51,48 @@ class ParkingUtil(object):
         if flagFound:
             self.parkings[idx] = 0
             self.__slot_counter -= 1
+            print(OUTPUT_MESSAGES[Constants.LEAVE].format(slot))
         else:
             LOGGER.error('Slot does not exist')
             raise ValueError('Slot does not exist')
 
     def get_registrations_by_colour(self, colour):
         if not colour:
-            return NOT_FOUND
-        return [parking.car.registration for parking
-                in self.parkings if isinstance(parking, Parking) and
-                parking.car.colour.lower() == colour.lower()]
+            print(Constants.NOT_FOUND)
+            return
+        for parking in self.parkings:
+            if isinstance(parking, Parking) and\
+                    parking.car.colour.lower() == colour.lower():
+                print(parking.car.registration, sep=' ', end=' ')
+        print(flush=True)
 
     def get_slot_by_registration(self, registration):
         if not registration:
-            return NOT_FOUND
+            print(Constants.NOT_FOUND)
+            return
         for parking in self.parkings:
             if parking.car.registration.lower() == registration.lower():
-                return parking.parking_slot
-        return NOT_FOUND
+                print(parking.parking_slot, sep=' ', end=' ')
+                print(flush=True)
+                return
+        print(Constants.NOT_FOUND)
 
     def get_slots_by_colour(self, colour):
         if not colour:
-            return NOT_FOUND
-        return [parking.parking_slot for parking in
-                self.parkings if isinstance(parking, Parking) and
-                parking.car.colour.lower() == colour.lower()]
+            print(Constants.NOT_FOUND)
+            return
+        for parking in self.parkings:
+            if isinstance(parking, Parking) and\
+                    parking.car.colour.lower() == colour.lower():
+                print(parking.parking_slot, sep=' ', end=' ')
+        print(flush=True)
 
     def get_parking_status(self):
-        return [parking for parking in self.parkings if
-                isinstance(parking, Parking)]
+        str_format = '{: <10} {: <19} {}'
+        for parking in self.parkings:
+            if isinstance(parking, Parking):
+                print(
+                    str_format.format(
+                        parking.parking_slot,
+                        parking.car.registration,
+                        parking.car.colour))

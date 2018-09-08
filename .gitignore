@@ -6,3 +6,4 @@ target/*
 tests/__pycache__/*
 src/unittest/python/__pycache__/*
 src/main/scripts/__pycache__/*
+src/main/python/*.pyc
